@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "892880484739",
+    "project_id": "books-management-13c74",
+    "storage_bucket": "books-management-13c74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892880484739:android:021554a3329802353c1eb6",
+        "android_client_info": {
+          "package_name": "com.example.quan_ly_thu_vien"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "892880484739-3pm203irsia03vdr8cjvfin2cmk380a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9wr8LWFG4BTr6zW2LKiWI0J_3Tele_b0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "892880484739-3pm203irsia03vdr8cjvfin2cmk380a2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
