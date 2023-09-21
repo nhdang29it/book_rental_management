@@ -53,7 +53,7 @@ class BookModel {
     );
 }
 
-  BookModel.fromJson(Map<String, dynamic> json) {
+   BookModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     url = json['url'];

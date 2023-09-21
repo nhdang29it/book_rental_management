@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:quan_ly_thu_vien/models/user_profile.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-
-final groupGender = StateProvider<bool>((ref) => true); // true false gender radio button state provider
 
 class EditProfile extends StatelessWidget {
   const EditProfile({super.key});
@@ -28,27 +24,68 @@ class EditProfile extends StatelessWidget {
   }
 }
 
-class EditProfileScreen extends StatelessWidget {
+
+
+class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
+
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+
+  TextEditingController displayNameController = TextEditingController(text: FirebaseAuth.instance.currentUser!.displayName ?? "" );
+  TextEditingController ageController = TextEditingController();
+  TextEditingController numberPhoneController = TextEditingController();
+  TextEditingController lopController = TextEditingController();
+  TextEditingController mssvController = TextEditingController();
+  bool gender = true;
+  bool onUpdate = false;
+
+
+  Future<void> updateProfile() async {
+    User user = FirebaseAuth.instance.currentUser!;
+    final userProfileRef = FirebaseFirestore.instance.collection("userProfile").doc(user.uid);
+    setState(() {
+      onUpdate = true;
+    });
+    await userProfileRef.update(
+        {
+          "gender": gender,
+          "age": ageController.text.toString(),
+          "phone": numberPhoneController.text,
+          "lop": lopController.text,
+          "mssv": mssvController.text
+        }
+    );
+    await user.updateDisplayName(displayNameController.text);
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    User user = FirebaseAuth.instance.currentUser!;
+    FirebaseFirestore.instance.collection("userProfile").doc(user.uid).withConverter<UserProfile>(
+        fromFirestore: (snapshot, _) => UserProfile.fromJson(snapshot.data()!),
+        toFirestore: (userProfile, _) => userProfile.toJson()
+    ).get()
+      .then((snapshot){
+      UserProfile userProfile = snapshot.data()!;
+      ageController.text = userProfile.age ?? "";
+      numberPhoneController.text = userProfile.numberPhone ?? "";
+      lopController.text = userProfile.lop ?? "";
+      mssvController.text = userProfile.mssv ?? "";
+      setState(() {
+        gender = userProfile.gender;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
     User user = FirebaseAuth.instance.currentUser!;
-    final userProfileRef = FirebaseFirestore.instance.collection("userProfile").doc(user.uid)
-        .withConverter<UserProfile>(
-        fromFirestore: (snapshot, _) => UserProfile.fromJson(snapshot.data()!),
-        toFirestore: (userProfile, _) => userProfile.toJson()
-    );
-
-
-    TextEditingController displayNameController = TextEditingController();
-    displayNameController.text = user.displayName ?? "";
-    TextEditingController ageController = TextEditingController();
-    TextEditingController numberPhoneController = TextEditingController();
-    TextEditingController lopController = TextEditingController();
-    TextEditingController mssvController = TextEditingController();
-
 
     return SingleChildScrollView(
       child: Padding(
@@ -96,167 +133,141 @@ class EditProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 25),
 
-            FutureBuilder(
-              future: userProfileRef.get(),
-              builder: (context, snapshot){
+            Column(
+              children: [
+                TextField(
+                  controller: ageController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    label: Text(
+                        'Tuổi: ',
+                        style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
 
-                if(!snapshot.hasData){
-                  return const CircularProgressIndicator();
-                }else {
-                  UserProfile userProfile = snapshot.data!.data()!;
-                  ageController.text = userProfile.age ?? "";
-                  numberPhoneController.text = userProfile.numberPhone ?? "";
-                  lopController.text = userProfile.lop ?? "";
-                  mssvController.text = userProfile.mssv ?? "";
+                  ),
+                  onSubmitted:(value){
+                    ageController.text = value;
+                  },
+                ),
 
-                  return Column(
-                    children: [
-                      TextField(
-                        controller: ageController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          label: Text(
-                              'Tuổi: ',
-                              style:
-                              TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(),
-                          ),
+                const SizedBox(height: 25),
+                Row(
+                  children: [
+                    const Text(
+                        'Giới tính: ',
+                        style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Radio(
+                        value: true,
+                        groupValue: gender,
+                        onChanged: (value){
+                          if(value != null){
+                            setState(() {
+                              gender = value;
+                            });
+                          }
+                        }
+                    ),
+                    const Text("nam"),
+                    Radio(
+                        value: false,
+                        groupValue: gender,
+                        onChanged: (value){
+                          if(value != null){
+                            setState(() {
+                              gender = value;
+                            });
+                          }
+                        }
+                    ),
+                    const Text("nữ")
+                  ],
+                ),
+                const SizedBox(height: 25),
 
-                        ),
-                        onSubmitted:(value){
-                          ageController.text = value;
-                        },
-                      ),
+                TextField(
+                  controller: numberPhoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    label: Text(
+                        'Số điện thoại: ',
+                        style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
 
-                      const SizedBox(height: 25),
-                      Row(
-                        children: [
-                          const Text(
-                              'Giới tính: ',
-                              style:
-                              TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          Consumer(
-                            builder: (context, ref, child){
-                              final grGenderWatch = ref.watch(groupGender);
-                              return Row(
-                                children: [
-                                  Radio(
-                                      value: true,
-                                      groupValue: grGenderWatch,
-                                      onChanged: (value){
-                                        if(value != null){
-                                          ref.read(groupGender.notifier).state = value;
-                                        }
-                                      }
-                                  ),
-                                  const Text("nam"),
-                                  Radio(
-                                      value: false,
-                                      groupValue: grGenderWatch,
-                                      onChanged: (value){
-                                        if(value != null){
-                                          ref.read(groupGender.notifier).state = value;
-                                        }
-                                      }
-                                  ),
-                                  const Text("nữ")
-                                ],
+                  ),
+                  onSubmitted:(value){
+                    numberPhoneController.text = value;
+                  },
+                ),
+                const SizedBox(height: 25),
 
-                              );
-                            },
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 25),
+                TextField(
+                  controller: lopController,
+                  decoration: const InputDecoration(
+                    label: Text(
+                        'Lớp: ',
+                        style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
 
-                      TextField(
-                        controller: numberPhoneController,
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          label: Text(
-                              'Số điện thoại: ',
-                              style:
-                              TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(),
-                          ),
+                  ),
+                  onSubmitted:(value){
+                    lopController.text = value;
+                  },
+                ),
+                const SizedBox(height: 25),
 
-                        ),
-                        onSubmitted:(value){
-                          numberPhoneController.text = value;
-                        },
-                      ),
-                      const SizedBox(height: 25),
+                TextField(
+                  controller: mssvController,
+                  decoration: const InputDecoration(
+                    label: Text(
+                        'MSSV: ',
+                        style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
 
-                      TextField(
-                        controller: lopController,
-                        decoration: const InputDecoration(
-                          label: Text(
-                              'Lớp: ',
-                              style:
-                              TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(),
-                          ),
+                  ),
+                  onSubmitted:(value){
+                    mssvController.text = value;
+                  },
+                ),
+                const SizedBox(height: 25),
 
-                        ),
-                        onSubmitted:(value){
-                          lopController.text = value;
-                        },
-                      ),
-                      const SizedBox(height: 25),
-
-                      TextField(
-                        controller: mssvController,
-                        decoration: const InputDecoration(
-                          label: Text(
-                              'MSSV: ',
-                              style:
-                              TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(),
-                          ),
-
-                        ),
-                        onSubmitted:(value){
-                          mssvController.text = value;
-                        },
-                      ),
-                      const SizedBox(height: 25),
-
-                    ],
-                  );
-                }
-              },
+              ],
             ),
 
-            Consumer(
-              builder: (context, ref, child){
+            Center(
+              child: ElevatedButton(
+                onPressed: ()async{
+                  updateProfile().then((value){
+                    setState(() {
+                      onUpdate = false;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Cập nhật thành công"),
+                          backgroundColor: Colors.green,
+                          duration: Duration(milliseconds: 1500),
+                        )
+                    );
+                    Navigator.of(context).pop();
+                  });
 
-                return Center(
-                  child: ElevatedButton(
-                    onPressed: ()async{
-                      userProfileRef.update(
-                          {
-                            "gender": ref.read(groupGender.notifier).state,
-                            "age": ageController.text.toString(),
-                            "phone": numberPhoneController.text,
-                            "lop": lopController.text,
-                            "mssv": mssvController.text
-                          }
-                      );
-                      await user.updateDisplayName(displayNameController.text);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cập nhật thành công")));
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Cập nhật"),
-                  ),
-                );
-              },
+                },
+                child: onUpdate ? const CircularProgressIndicator() : const Text("Cập nhật"),
+              ),
             ),
             const SizedBox(height: 25,)
-
 
           ],
         ),

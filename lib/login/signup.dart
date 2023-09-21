@@ -12,17 +12,25 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
+  final FocusNode _focusNodeMssv = FocusNode();
+  final FocusNode _focusNodeLop = FocusNode();
+  final FocusNode _focusNodeTuoi = FocusNode();
+  final FocusNode _focusNodePhone = FocusNode();
   final FocusNode _focusNodeEmail = FocusNode();
   final FocusNode _focusNodePassword = FocusNode();
   final FocusNode _focusNodeConfirmPassword = FocusNode();
-  // final TextEditingController _controllerUsername = TextEditingController();
+  final TextEditingController _controllerUsername = TextEditingController();
+  final TextEditingController _controllerMssv = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  final TextEditingController _controllerConFirmPassword =
-  TextEditingController();
+  final TextEditingController _controllerConFirmPassword = TextEditingController();
+  final TextEditingController _controllerLop = TextEditingController();
+  final TextEditingController _controllerPhone = TextEditingController();
+  final TextEditingController _controllerTuoi = TextEditingController();
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool gender = true;
 
   @override
   Widget build(BuildContext context) {
@@ -45,29 +53,160 @@ class _SignupState extends State<Signup> {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 45),
+              TextFormField(
+                controller: _controllerUsername,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  labelText: "UserName",
+                  prefixIcon: const Icon(Icons.person_2_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Vui lòng nhập tên";
+                  }
+                  return null;
+                },
+                onEditingComplete: () => _focusNodeMssv.requestFocus(),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  const Text(
+                      'Giới tính: ',
+                      style:
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Radio(
+                      value: true,
+                      groupValue: gender,
+                      onChanged: (value){
+                        if(value != null){
+                          setState(() {
+                            gender = value;
+                          });
+                        }
+                      }
+                  ),
+                  const Text("nam"),
+                  Radio(
+                      value: false,
+                      groupValue: gender,
+                      onChanged: (value){
+                        if(value != null){
+                          setState(() {
+                            gender = value;
+                          });
+                        }
+                      }
+                  ),
+                  const Text("nữ")
+                ],
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                controller: _controllerMssv,
+                focusNode: _focusNodeMssv,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  labelText: "MSSV",
+                  prefixIcon: const Icon(Icons.numbers_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Vui lòng nhập mã số sinh viên";
+                  } else if(value.length != 8){
+                    return "Mã số sinh viên có 8 chữ số";
+                  }
+                  return null;
+                },
+                onEditingComplete: () => _focusNodeLop.requestFocus(),
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                controller: _controllerLop,
+                focusNode: _focusNodeLop,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  labelText: "Lớp",
+                  prefixIcon: const Icon(Icons.class_sharp),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Vui lòng nhập lớp";
+                  }
+                  return null;
+                },
+                onEditingComplete: () => _focusNodeTuoi.requestFocus(),
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                controller: _controllerTuoi,
+                focusNode: _focusNodeTuoi,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Tuổi",
+                  prefixIcon: const Icon(Icons.tag),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Vui lòng nhập tuổi của bạn";
+                  } else if(int.parse(value).isNaN){
+                    return "Vui lòng nhập vào số tuổi của bạn";
+                  }
+                  return null;
+                },
+                onEditingComplete: () => _focusNodePhone.requestFocus(),
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                controller: _controllerPhone,
+                focusNode: _focusNodePhone,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  labelText: "Số điện thoại",
+                  prefixIcon: const Icon(Icons.phone_android),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Vui lòng nhập số điện thoại của bạn";
+                  } else if(value.length < 10 && value.length > 11){
+                    return "Số điện thoại không hợp lệ";
+                  }
+                  return null;
+                },
+                onEditingComplete: () => _focusNodeEmail.requestFocus(),
+              ),
+              const SizedBox(height: 15),
 
-              // TextFormField(
-              //   controller: _controllerUsername,
-              //   keyboardType: TextInputType.name,
-              //   decoration: InputDecoration(
-              //     labelText: "UserName",
-              //     prefixIcon: const Icon(Icons.person_2_outlined),
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //     enabledBorder: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //   ),
-              //   validator: (String? value) {
-              //     if (value == null || value.isEmpty) {
-              //       return "Vui lòng nhập tên";
-              //     }
-              //     return null;
-              //   },
-              //   onEditingComplete: () => _focusNodeEmail.requestFocus(),
-              // ),
-              // const SizedBox(height: 10),
               TextFormField(
                 controller: _controllerEmail,
                 focusNode: _focusNodeEmail,
@@ -92,7 +231,8 @@ class _SignupState extends State<Signup> {
                 },
                 onEditingComplete: () => _focusNodePassword.requestFocus(),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
+
               TextFormField(
                 controller: _controllerPassword,
                 obscureText: _obscurePassword,
@@ -128,7 +268,8 @@ class _SignupState extends State<Signup> {
                 onEditingComplete: () =>
                     _focusNodeConfirmPassword.requestFocus(),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
+
               TextFormField(
                 controller: _controllerConFirmPassword,
                 obscureText: _obscurePassword,
@@ -177,17 +318,20 @@ class _SignupState extends State<Signup> {
                         await FirebaseAuth.instance.createUserWithEmailAndPassword(
                             email: _controllerEmail.text,
                             password: _controllerPassword.text
-                        ).then((value) {
+                        ).then((userCredential) {
                           // them collection profile
                           FirebaseFirestore.instance.collection('userProfile')
-                              .doc(value.user!.uid)
+                              .doc(userCredential.user!.uid)
                               .set({
-                            "age": 22,
-                            "mssv": "B10000",
-                            "lop": "lop?",
-                            "numberPhone": "01234",
-                            "gender": true
+                            "age": "chua co",
+                            "mssv": _controllerMssv.text,
+                            "lop": "chua co",
+                            "phone": "chua co",
+                            "gender": gender
                           });
+
+                          userCredential.user!.updateDisplayName(_controllerUsername.text);
+
                         });
                         _formKey.currentState?.reset();
                       }

@@ -1,19 +1,41 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quan_ly_thu_vien/providers/network_provider.dart';
+import 'package:quan_ly_thu_vien/services/elastic_search.dart';
 import '../models/book_model.dart';
 
 
 class BooksNotifier extends StateNotifier<List<BookModel>> {
-  BooksNotifier() : super([]){
-    fetchBook();
-  }
+  BooksNotifier(this.ref) : super([]);
+
+  final Ref ref;
+
 
   void addBook(BookModel book){
     state = [...state, book];
   }
   void removeBook(String bookId){
     state = [
-      for(final book in state) if(book.id == bookId) book
+      for(final book in state) if(book.id != bookId) book
     ];
+  }
+
+  Future<void> getAllBook() async {
+    final network = ref.watch(networkProvider);
+    final ElasticService esService = ElasticService(baseUrl: "${network.host}:${network.port}", index: network.index);
+
+    esService.getAllBooks().then((value){
+      print(jsonDecode(value.body));
+      state = [
+        BookModel(
+            id: "1",
+            title: "Dac nhan tam",
+            description: "Mô tả ngắn, sadfdsaf masdf ffff ff ss cc vv bb hhh ttt 4 54  yydfhgs sdfg asdf adsf asdfcvx  vxc vv xxx",
+            url: "https://salt.tikicdn.com/cache/w400/media/catalog/product/d/a/dacnhantam_2_1_1.jpg"
+        )
+      ];
+    });
   }
 
   Future<void> fetchBook() async {
@@ -48,5 +70,5 @@ class BooksNotifier extends StateNotifier<List<BookModel>> {
 }
 
 final booksProvider = StateNotifierProvider<BooksNotifier, List<BookModel>>((ref) {
-  return BooksNotifier();
+  return BooksNotifier(ref);
 });

@@ -57,12 +57,6 @@ class UserProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // ElevatedButton(
-            //   onPressed: (){
-            //     print(user.uid);
-            //   },
-            //   child: Text("print"),
-            // ),
             const SizedBox(height: 20),
             Center(
               child: Text(user.displayName != null ? user.displayName! : "Your name",
@@ -84,16 +78,16 @@ class UserProfileScreen extends StatelessWidget {
               thickness: 2,
             ),
             const SizedBox(height: 25),
-            FutureBuilder(
-              future: FirebaseFirestore.instance.collection("userProfile").doc(user.uid)
+            StreamBuilder(
+              stream: FirebaseFirestore.instance.collection("userProfile").doc(user.uid)
                     .withConverter<UserProfile>(
                   fromFirestore: (snapshot, _) => UserProfile.fromJson(snapshot.data()!),
                   toFirestore: (userProfile, _) => userProfile.toJson()
-              ).get(),
+              ).snapshots(),
               builder: (context, snapshot){
 
                 if(!snapshot.hasData){
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
 
                 UserProfile userProfile = snapshot.data!.data()!;

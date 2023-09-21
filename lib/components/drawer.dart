@@ -14,14 +14,13 @@ class MyDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.green.shade600,
+              color: Colors.lightGreen.shade600,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
+                ClipOval(
                   child: Image.network(
                     "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=2000",
                     height: 100,
@@ -41,7 +40,10 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text("Liên hệ, phản hồi"),
+            title: const Text("Liên hệ, phản hồi", style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),),
+            trailing: Icon(Icons.phone_forwarded,color: Colors.lightGreen.shade600,),
             onTap: (){},
           ),
           const Divider(),
@@ -60,18 +62,14 @@ class MyDrawer extends StatelessWidget {
           const Divider(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-            child: Text("Luận văn".toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold),),
+            child: Text("Khác".toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold),),
           ),
           ListTile(
-            title: const Text("Luận văn KHMT"),
+            title: const Text("Luận văn"),
             onTap: (){},
           ),
           ListTile(
-            title: const Text("Luận văn CNTT"),
-            onTap: (){},
-          ),
-          ListTile(
-            title: const Text("Luận văn HTTT"),
+            title: const Text("Đăng kí mượn sách"),
             onTap: (){},
           ),
           ListTile(
@@ -82,8 +80,11 @@ class MyDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            title: const Text("Đăng xuất"),
-            trailing: const Icon(Icons.logout_outlined),
+            title: const Text("Đăng xuất",style: TextStyle(
+              fontWeight: FontWeight.w500
+            ),),
+            textColor: Colors.red,
+            trailing: const Icon(Icons.logout_outlined,color: Colors.red),
             onTap: (){
               FirebaseAuth.instance.signOut();
             },
