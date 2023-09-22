@@ -69,7 +69,7 @@ class SearchPageDelegate extends SearchDelegate {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView(
-              children: _buildResults(data["hits"]["hits"]),
+              children: _buildResults(data["hits"]["hits"], context),
             ),
           );
         }
@@ -104,7 +104,7 @@ class SearchPageDelegate extends SearchDelegate {
         },
       ),
       ListTile(
-        title: Text("Lập trình"),
+        title: const Text("Lập trình"),
         onTap: (){
           query = "lập trình";
         },
@@ -118,7 +118,7 @@ class SearchPageDelegate extends SearchDelegate {
     ];
   }
 
-  List<Widget> _buildResults (List<dynamic> listData) {
+  List<Widget> _buildResults (List<dynamic> listData, BuildContext context) {
 
     if(listData.isEmpty){
       return [
@@ -129,9 +129,46 @@ class SearchPageDelegate extends SearchDelegate {
     }
 
     return listData.map((element) => Card(
-      child: ListTile(
-        title: Text(element["_source"]["title"] ?? "ten sach: null"),
-        subtitle: Text("Author: ${element["_source"]["author"] ?? "no name"}"),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.network(
+              element["_source"]["url"] ?? "https://nhatminhad.net/files/assets/idesign-nhung-thiet-ke-bia-sach-dep-nhat-danh-cho-nam-2018-09.jpg",
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+              height: 110,
+              width: 70,
+            ),
+            SizedBox(width: 10,),
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width - 120,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    element["_source"]["title"] ?? "ten sach: null",
+                    softWrap: true,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis
+                  ),
+                  SizedBox(height: 10,),
+                  Text("Author: ${element["_source"]["author"] ?? "no name"}", softWrap: true,),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     )).toList();
   }
