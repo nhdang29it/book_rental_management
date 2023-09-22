@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/network_model.dart';
 
-class NetWorkProvider extends StateNotifier<NetWorkConfigure>{
-  NetWorkProvider() : super(NetWorkConfigure(host: "localhost", port: 9200, index: "facebook"));
+class NetWorkNotifier extends StateNotifier<NetWorkConfigure>{
+  NetWorkNotifier() : super(NetWorkConfigure(host: "localhost", port: 9200, index: "books"));
 
   void changeConfigure({String? host, int? port, String? index}){
     state = state.copyWith(newHost: host, newPort: port, newIndex: index);
@@ -17,6 +17,7 @@ class NetWorkProvider extends StateNotifier<NetWorkConfigure>{
 
 }
 
-final networkProvider = StateNotifierProvider<NetWorkProvider, NetWorkConfigure>((ref) {
-  return NetWorkProvider();
+final networkProvider = StateNotifierProvider<NetWorkNotifier, NetWorkConfigure>((ref) {
+  return NetWorkNotifier();
 });
+

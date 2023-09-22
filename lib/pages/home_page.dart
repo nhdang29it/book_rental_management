@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quan_ly_thu_vien/components/drawer.dart';
-import 'package:quan_ly_thu_vien/components/today_books.dart';
-import 'package:quan_ly_thu_vien/components/new_books.dart';
-import 'package:quan_ly_thu_vien/components/recommend_books.dart';
+import 'package:quan_ly_thu_vien/components/all_book.dart';
 import 'package:quan_ly_thu_vien/components/bottom_nav_bar.dart';
 import '../models/network_model.dart';
 import '../providers/network_provider.dart';
@@ -42,11 +40,8 @@ class HomePage extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         child: ListView(
           children: const [
-            TodayBooks(),
+            AllBook(),
             SizedBox(height: 10,),
-            NewBooks(),
-            SizedBox(height: 10,),
-            RecommendBooks()
           ],
         ),
       )

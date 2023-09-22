@@ -4,8 +4,6 @@ import 'package:quan_ly_thu_vien/models/network_model.dart';
 import 'package:quan_ly_thu_vien/pages/search_page.dart';
 import 'package:quan_ly_thu_vien/providers/network_provider.dart';
 import '../components/bottom_nav_bar.dart';
-import 'package:quan_ly_thu_vien/components/new_books.dart';
-import '../providers/books_provider.dart';
 
 class MyBooks extends ConsumerWidget {
   const MyBooks({super.key});
@@ -15,7 +13,6 @@ class MyBooks extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    // NetWorkConfigure network = ref.read(networkProvider.notifier).getNetWork();
     NetWorkConfigure network = ref.watch(networkProvider);
 
     return Scaffold(
@@ -35,15 +32,10 @@ class MyBooks extends ConsumerWidget {
       ),
       backgroundColor: Colors.grey.shade300,
       bottomNavigationBar: MyBottomNavBar(currentIndex: myProperty["bot_nav_idx"]),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: (){
-      //     ref.read(booksProvider.notifier).fetchBook();
-      //   },
-      //   child: const Icon(Icons.refresh),
-      // ),
+
       body: ListView(
         children: const [
-          NewBooks()
+          Text("Chua co sach")
         ],
       ),
     );

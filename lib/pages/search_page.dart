@@ -53,7 +53,7 @@ class SearchPageDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
 
-    ElasticService esClient = ElasticService(baseUrl: "${network.host}:${network.port}", index: network.index);
+    ElasticService esClient = ElasticService(baseUrl: "${network.host}:${network.port}", index: network.index, type: "_search");
 
 
     return FutureBuilder(
@@ -63,6 +63,9 @@ class SearchPageDelegate extends SearchDelegate {
           return const Center(child: CircularProgressIndicator(),);
         } else {
           var data = jsonDecode(utf8.decode(snapshot.data!.bodyBytes));
+          // if(data["hits"]["total"]["value"] == 0){
+          //   print("khog co du lieu");
+          // }
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView(
@@ -88,31 +91,48 @@ class SearchPageDelegate extends SearchDelegate {
   List<ListTile> _buildSuggestions () {
     return [
       ListTile(
-        title: Text(network.host),
+        title: const Text("python"),
         trailing: const Icon(Icons.access_time_outlined),
         onTap: (){
-          query = "Gợi ý 1";
+          query = "python";
         },
       ),
       ListTile(
-        title: Text(network.port.toString()),
+        title: const Text("html"),
         onTap: (){
-          query = "Gợi ý 2";
+          query = "html";
         },
       ),
       ListTile(
-        title: Text(network.index),
+        title: Text("Lập trình"),
+        onTap: (){
+          query = "lập trình";
+        },
       ),
       ListTile(
-        title: Text("Gợi ý 4"),
+        title: Text("code"),
+        onTap: (){
+          query = "code";
+        },
       ),
     ];
   }
 
-  List<ListTile> _buildResults (List<dynamic> listData) {
-    return listData.map((element) => ListTile(
-      title: Text(element["_source"]["user"] ?? "no user"),
-      subtitle: Text("Tuoi: ${element["_source"]["age"] ?? "0"}"),
+  List<Widget> _buildResults (List<dynamic> listData) {
+
+    if(listData.isEmpty){
+      return [
+        const ListTile(
+          title: Text("Không có dữ liệu"),
+        )
+      ];
+    }
+
+    return listData.map((element) => Card(
+      child: ListTile(
+        title: Text(element["_source"]["title"] ?? "ten sach: null"),
+        subtitle: Text("Author: ${element["_source"]["author"] ?? "no name"}"),
+      ),
     )).toList();
   }
 
