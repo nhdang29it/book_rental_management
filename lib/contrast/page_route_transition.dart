@@ -28,6 +28,12 @@ PageTransition pageRouteTransition(RouteSettings settings){
           type: PageTransitionType.bottomToTop,
           duration: const Duration(milliseconds: 500)
       );
+    case '/seeMore':
+      return PageTransition(
+          child: SeeMoreScreen(myArg: settings.arguments! as Map<String, dynamic>),
+          type: PageTransitionType.rightToLeft,
+          duration: const Duration(milliseconds: 500)
+      );
     default:
       return PageTransition(
           child: const HomePage(),

@@ -19,7 +19,7 @@ class AllBook extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20,),
+          const SizedBox(height: 10,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             child: Row(
@@ -30,7 +30,11 @@ class AllBook extends StatelessWidget {
                   style: myTextStyle(context)
                 ),
                 TextButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.pushNamed(context, "/seeMore", arguments: {
+                      "label": "Sách lập trình"
+                    });
+                  },
                   child: const Text("Xem thêm"),
                 ),
               ],
