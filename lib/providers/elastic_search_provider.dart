@@ -9,5 +9,5 @@ final elasticSearchProvider = Provider((ref) {
 });
 
 final allBookProvider = FutureProvider((ref){
-  return ref.watch(elasticSearchProvider).getBookWithSize(5);
+  return ref.watch(elasticSearchProvider).getBookWithSize(8);
 });

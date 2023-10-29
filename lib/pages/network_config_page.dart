@@ -11,34 +11,51 @@ class NetWorkConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cài đặt mạng"),
-      ),
-      body: const NetWorkConfigScreen(),
-    );
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text("Cài đặt mạng"),
+    //   ),
+    //   body: const NetWorkConfigScreen(),
+    // );
+    return const NetWorkConfig();
   }
 }
 
 class NetWorkConfigScreen extends ConsumerWidget {
   const NetWorkConfigScreen({super.key});
 
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final network = ref.watch(networkProvider);
+    TextEditingController urlController = TextEditingController(text: network.host);
+    TextEditingController indexController = TextEditingController(text: network.index);
+    TextEditingController portController = TextEditingController(text: network.port.toString());
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView(
         children: [
-          Text("url: ${network.host}"),
-          Text("port: ${network.port}"),
-          Text("index: ${network.index}"),
-          const Divider(),
           TextField(
             keyboardType: TextInputType.text,
+            controller: urlController,
             decoration: const InputDecoration(
               label: Text(
-                  'url: ',
+                  'ip: ',
+                  style:
+                  TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10,),
+          TextField(
+            keyboardType: TextInputType.text,
+            controller: portController,
+            decoration: const InputDecoration(
+              label: Text(
+                  'port: ',
                   style:
                   TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
               border: OutlineInputBorder(
@@ -46,19 +63,142 @@ class NetWorkConfigScreen extends ConsumerWidget {
               ),
 
             ),
-            onSubmitted: (value){
-              ref.read(networkProvider.notifier).changeConfigure(host: value.toString());
-            },
           ),
-          // ElevatedButton(
-          //   onPressed: (){
-          //     ref.read(networkProvider.notifier).changeConfigure(host: "192.168.1.25");
-          //   },
-          //   child: Text("change url"),
-          // )
+          const SizedBox(height: 10,),
+          TextField(
+            keyboardType: TextInputType.text,
+            controller: indexController,
+            decoration: const InputDecoration(
+              label: Text(
+                  'index: ',
+                  style:
+                  TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10,),
+          ElevatedButton(
+            onPressed: (){
+              ref.read(networkProvider.notifier).changeConfigure(
+                host: urlController.text,
+                index: indexController.text,
+                port: int.parse(portController.text)
+              );
+
+            },
+            child: const Text("Lưu"),
+          )
         ],
       ),
     );
   }
 }
+
+class NetWorkConfig extends StatefulWidget {
+  const NetWorkConfig({super.key});
+
+  @override
+  State<NetWorkConfig> createState() => _NetWorkConfigState();
+}
+
+class _NetWorkConfigState extends State<NetWorkConfig> {
+
+  bool isEnable = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Cài đặt mạng"),
+        actions: [
+          IconButton(
+            onPressed: (){
+              setState(() {
+                isEnable = !isEnable;
+              });
+            },
+            icon: Icon(isEnable ? Icons.settings : Icons.edit),
+          )
+        ],
+      ),
+      body: Consumer(
+        builder: (context, ref, child ){
+          final network = ref.watch(networkProvider);
+          TextEditingController urlController = TextEditingController(text: network.host);
+          TextEditingController indexController = TextEditingController(text: network.index);
+          TextEditingController portController = TextEditingController(text: network.port.toString());
+
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView(
+              children: [
+                TextField(
+                  keyboardType: TextInputType.text,
+                  controller: urlController,
+                  enabled: isEnable,
+                  decoration: const InputDecoration(
+                    label: Text(
+                        'ip: ',
+                        style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                TextField(
+                  keyboardType: TextInputType.text,
+                  controller: portController,
+                  enabled: isEnable,
+                  decoration: const InputDecoration(
+                    label: Text(
+                        'port: ',
+                        style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
+
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                TextField(
+                  keyboardType: TextInputType.text,
+                  controller: indexController,
+                  enabled: isEnable,
+                  decoration: const InputDecoration(
+                    label: Text(
+                        'index: ',
+                        style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                ElevatedButton(
+                  onPressed: isEnable ? (){
+                    ref.read(networkProvider.notifier).changeConfigure(
+                        host: urlController.text,
+                        index: indexController.text,
+                        port: int.parse(portController.text)
+                    );
+
+                    Navigator.pop(context);
+                  } : null,
+                  child: const Text("Lưu thay đổi"),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 

@@ -5,13 +5,15 @@ class UserProfile{
 
   UserProfile({this.age, this.numberPhone, this.mssv, this.lop, this.gender = true});
 
-  UserProfile.fromJson(Map<String, Object?> json):this(
-      age: json['age']! as String,
-      numberPhone: json['phone']! as String,
-      mssv: json['mssv']! as String,
-      lop: json['lop']! as String,
-      gender: json['gender']! as bool
-  );
+  factory UserProfile.fromJson(Map<String, dynamic> json){
+    return UserProfile(
+        age: json['age'],
+        numberPhone: json['phone'],
+        mssv: json['mssv'],
+        lop: json['lop'],
+        gender: json['gender'] ?? true
+    );
+  }
 
   Map<String, Object?> toJson() {
     return {

@@ -4,8 +4,9 @@ class DanhGiaSachModel {
   final String userName;
   final String mssv;
   final String bookId;
+  final String tenSach;
   final String? danhGia;
-  final int rating;
+  final double rating;
 
   DanhGiaSachModel(
       {this.id,
@@ -13,18 +14,21 @@ class DanhGiaSachModel {
       required this.userName,
       required this.mssv,
       required this.bookId,
+        required this.tenSach,
       this.danhGia,
       required this.rating});
 
   factory DanhGiaSachModel.fromJson(Map<String, dynamic> json) {
     return DanhGiaSachModel(
-        id: json['id'] ?? "",
-        userId: json['userId'],
-        userName: json['userName'],
-        mssv: json['mssv'],
-        bookId: json['bookId'],
+        id: json['id'],
+        userId: json['userId'] ?? "?",
+        userName: json['userName'] ?? "?",
+        mssv: json['mssv'] ?? "?",
+        bookId: json['bookId'] ?? "?",
+        tenSach: json["tenSach"] ?? "?",
         danhGia: json['danhGia'],
-        rating: json['rating']);
+        rating: json['rating'] ?? 0
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -33,7 +37,8 @@ class DanhGiaSachModel {
     data['userName'] = userName;
     data['mssv'] = mssv;
     data['bookId'] = bookId;
-    data['danhGia'] = danhGia;
+    data['tenSach'] = tenSach;
+    data['danhGia'] = danhGia ?? "";
     data['rating'] = rating;
     return data;
   }

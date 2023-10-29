@@ -53,24 +53,45 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text("Sách tiếng việt"),
-            onTap: (){},
+            onTap: (){
+              Navigator.pushNamed(context, "/seeMore", arguments: {
+                "label": "Sách tiếng việt"
+              });
+            },
           ),
           ListTile(
             title: const Text("Sách tiếng anh"),
-            onTap: (){},
+            onTap: (){
+              Navigator.pushNamed(context, "/seeMore", arguments: {
+                "label": "Sách tiếng anh"
+              });
+            },
           ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
             child: Text("Khác".toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold),),
           ),
-          ListTile(
-            title: const Text("Luận văn"),
-            onTap: (){},
-          ),
-          ListTile(
-            title: const Text("Đăng kí mượn sách"),
-            onTap: (){},
+          // ListTile(
+          //   title: const Text("Luận văn"),
+          //   onTap: (){},
+          // ),
+          ExpansionTile(
+              title: const Text("Quản lý mượn, trả sách"),
+            children: [
+              ListTile(
+                title: const Text("Xem danh sách mượn"),
+                onTap: (){
+                  Navigator.pushNamed(context, QuanLyMuonSachPage.myProperty['routeName']);
+                },
+              ),
+              ListTile(
+                title: const Text("Đăng kí mượn sách"),
+                onTap: (){
+                  Navigator.pushNamed(context, DangKyMuonSachScreen.myProperty['routeName']);
+                },
+              ),
+            ],
           ),
           ListTile(
             title: const Text("Network configure"),

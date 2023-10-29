@@ -49,7 +49,12 @@ class AllBook extends StatelessWidget {
                 return snapshot.when(
                     data: (snapshot){
                       List<dynamic> listBook = snapshot["hits"]["hits"];
-                      List<BookModel> list = listBook.map((e) => BookModel.fromJson(e["_source"])).toList();
+                      List<BookModel> list = listBook.map((e){
+                        final Map<String, dynamic> map = e["_source"];
+                        map["id"] = e["_id"];
+
+                        return BookModel.fromJson(map);
+                      }).toList();
 
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
