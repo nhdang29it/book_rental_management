@@ -55,7 +55,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text("Sách kĩ năng lập trình"),
             onTap: (){
               Navigator.pushNamed(context, "/seeMore", arguments: {
-                "label": "Sách tiếng việt",
+                "label": "Sách kĩ năng lập trình",
                 "type": "kn"
               });
             },
