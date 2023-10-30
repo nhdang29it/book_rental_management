@@ -46,7 +46,7 @@ class ReviewBook extends StatelessWidget {
                       Text(rv.userName),
                     ],
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(height: 5,),
                   ListTile(
                     title: Text("Review: ${rv.danhGia}"),
                     subtitle: Row(

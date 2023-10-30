@@ -11,7 +11,7 @@ class DangKiMuonSachModel {
   final String ngayDK;
   final String ngayMuon;
   final String ngayTra;
-  final String? trangThai;
+  final String trangThai;
   final DateTime? timestamp;
 
   DangKiMuonSachModel(
@@ -23,7 +23,7 @@ class DangKiMuonSachModel {
         required this.books,
         required this.ngayDK,
         required this.ngayMuon,
-        this.trangThai,
+        required this.trangThai,
         required this.ngayTra,
         this.timestamp
       });
@@ -42,7 +42,7 @@ class DangKiMuonSachModel {
         ngayDK : json['ngayDK'] ?? "?",
         ngayMuon : json['ngayMuon'] ?? "?",
         ngayTra : json['ngayTra'] ?? "?",
-      trangThai: json['trangThai'],
+      trangThai: json['trangThai'] ?? "?",
       timestamp: json['timestamp']
     );
   }
@@ -58,7 +58,7 @@ class DangKiMuonSachModel {
     data['ngayDK'] = ngayDK;
     data['ngayMuon'] = ngayMuon;
     data['ngayTra'] = ngayTra;
-    data['trangThai'] = trangThai ?? "0";
+    data['trangThai'] = trangThai;
     return data;
   }
 }

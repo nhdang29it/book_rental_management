@@ -94,7 +94,7 @@ class DangKyMuonSachScreen extends StatelessWidget {
                       );
                     });
                   },
-                  child: const Text("Clear"),
+                  child: const Text("Xóa tất cả"),
                 ),
                 const Divider(),
                 const SizedBox(
@@ -155,45 +155,74 @@ class DangKyMuonSachScreen extends StatelessWidget {
                   height: 10,
                 ),
                 Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("Thông tin đăng kí mượn sách".toUpperCase(), style: const TextStyle(
-                        fontWeight: FontWeight.w500
-                      ),),
-                      const SizedBox(height: 10,),
-                      Text(currentUser!.uid),
-                      Text(currentUser.displayName!),
-                      Text(currentUser.email!),
-                      Text("Ngày đăng kí: ${dateTimeNow.day}-${dateTimeNow.month}-${dateTimeNow.year}"),
-                    ],
+                  shadowColor: Colors.red.shade200,
+                  surfaceTintColor: Colors.red.shade300,
+                  elevation: 3.5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0.5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Thông tin đăng kí mượn sách".toUpperCase(), style: const TextStyle(
+                          fontWeight: FontWeight.w500
+                        ),),
+                        const SizedBox(height: 10,),
+                        infoTileRow(label: "ID user:", value: currentUser!.uid),
+                        const SizedBox(height: 5,),
+                        infoTileRow(label: "Tên:", value: currentUser.displayName!),
+                        const SizedBox(height: 5,),
+                        infoTileRow(label: "Email:", value: currentUser.email!),
+                        const SizedBox(height: 5,),
+                        infoTileRow(label: "Ngày đăng kí:", value: "${dateTimeNow.day}-${dateTimeNow.month}-${dateTimeNow.year}"),
+                        const SizedBox(height: 5,),
+                      ],
+                    ),
                   ),
                 ),
+                const SizedBox(height: 20,),
                 ElevatedButton(
                   onPressed: () async {
-                    if(ngayTra.isBefore(ngayMuon)){
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Ngày trả phải sau ngày mượn!!")));
+                    final value = await dkms.kiemTraMuon();
+                    if(!value){
+                      if(ngayTra.isBefore(ngayMuon)){
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Ngày trả phải sau ngày mượn!!")));
+                      } else {
+                        final user = await userProfileManager.getUserProfile();
+                        dkms
+                            .dangKiMuon(DangKiMuonSachModel(
+                            userId: currentUser.uid,
+                            userName: currentUser.displayName!,
+                            mssv: user.mssv!,
+                            email: currentUser.email!,
+                            books: books,
+                            ngayDK:
+                            "${dateTimeNow.day}-${dateTimeNow.month}-${dateTimeNow.year}",
+                            trangThai: "0",
+                            ngayMuon: ngayMuonController.text,
+                            ngayTra: ngayTraController.text), datetime: dateTimeNow)
+                            .then((value) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Đăng ký thành công")));
+                          Navigator.pop(context);
+                        });
+                      }
                     } else {
-                      final user = await userProfileManager.getUserProfile();
-
-                      dkms
-                          .dangKiMuon(DangKiMuonSachModel(
-                          userId: currentUser.uid,
-                          userName: currentUser.displayName!,
-                          mssv: user.mssv!,
-                          email: currentUser.email!,
-                          books: books,
-                          ngayDK:
-                          "${dateTimeNow.day}-${dateTimeNow.month}-${dateTimeNow.year}",
-                          ngayMuon: ngayMuonController.text,
-                          ngayTra: ngayTraController.text), datetime: dateTimeNow)
-                          .then((value) {
-                        Navigator.pop(context);
-                      });
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Bạn không thể đăng ký")));
                     }
+
                   },
-                  child: const Text("Đăng kí"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.greenAccent.shade700,
+                    shadowColor: Colors.greenAccent.shade400,
+                    elevation: 2.5
+                  ),
+                  child: const Text("Đăng kí", style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: Colors.white,
+                    letterSpacing: 1
+                  ),),
                 ),
+                const SizedBox(height: 10,),
               ],
             ),
           );
@@ -202,3 +231,22 @@ class DangKyMuonSachScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+Row infoTileRow({required String label, required String value}) => Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Expanded(
+        flex: 4,
+        child: Text(label, textAlign: TextAlign.end,style: const TextStyle(
+          fontWeight: FontWeight.w500
+        ),)
+    ),
+    const SizedBox(width: 5,),
+    Expanded(
+        flex: 9,
+        child: Text(value)
+    ),
+  ],
+);

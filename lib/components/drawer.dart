@@ -52,10 +52,11 @@ class MyDrawer extends StatelessWidget {
             child: Text("Thể loại sách".toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold),),
           ),
           ListTile(
-            title: const Text("Sách tiếng việt"),
+            title: const Text("Sách kĩ năng lập trình"),
             onTap: (){
               Navigator.pushNamed(context, "/seeMore", arguments: {
-                "label": "Sách tiếng việt"
+                "label": "Sách tiếng việt",
+                "type": "kn"
               });
             },
           ),

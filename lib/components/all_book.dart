@@ -32,7 +32,8 @@ class AllBook extends StatelessWidget {
                 TextButton(
                   onPressed: (){
                     Navigator.pushNamed(context, "/seeMore", arguments: {
-                      "label": "Sách lập trình"
+                      "label": "Sách lập trình",
+                      "type": "lt"
                     });
                   },
                   child: const Text("Xem thêm"),

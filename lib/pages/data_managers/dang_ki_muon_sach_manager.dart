@@ -11,17 +11,6 @@ class DangKiMuonSachManager {
     final List<DangKiMuonSachModel> dkms = [];
     final QuerySnapshot querySnapshot = await collectionReference.where("userId", isEqualTo: user.uid).get();
 
-    // querySnapshot.docs.sort((a,b){ // sap xep theo timestamp
-    //   final rs1 = a.data()as Map<String, dynamic>;
-    //   final rs2 = b.data() as Map<String, dynamic>;
-    //
-    //   final date1 = (rs1["timestamp"] as Timestamp).toDate();
-    //   final date2 = (rs2["timestamp"] as Timestamp).toDate();
-    //
-    //   return -date2.compareTo(date1);
-    // });
-
-
     for (var element in querySnapshot.docs) {
       final result = element.data() as Map<String, dynamic>;
       result["dkmsId"] = element.id;
@@ -32,6 +21,12 @@ class DangKiMuonSachManager {
 
     return dkms;
   }
+
+  Future<bool> kiemTraMuon() async {
+    final data = await collectionReference.where("userId", isEqualTo: user.uid ).where("trangThai", whereIn: ["0", "1", "3"]).get();
+    return data.docs.isEmpty ? false : true;
+  }
+
 
   Future<void> dangKiMuon(DangKiMuonSachModel dkms, {DateTime? datetime}) async {
     final data = dkms.toJson();

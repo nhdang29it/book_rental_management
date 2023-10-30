@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quan_ly_thu_vien/components/drawer.dart';
 import 'package:quan_ly_thu_vien/components/all_book.dart';
 import 'package:quan_ly_thu_vien/components/bottom_nav_bar.dart';
+import 'package:quan_ly_thu_vien/components/thong_bao_trang_chu.dart';
 import 'package:quan_ly_thu_vien/models/book_model.dart';
 import '../models/network_model.dart';
 import '../providers/network_provider.dart';
@@ -48,8 +49,9 @@ class HomePage extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           child: ListView(
             children: [
-              AllBook(),
-              SizedBox(
+              const ThongBaoTrangChu(),
+              const AllBook(),
+              const SizedBox(
                 height: 10,
               ),
               ElevatedButton(

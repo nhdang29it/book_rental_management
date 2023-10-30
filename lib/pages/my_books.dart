@@ -33,10 +33,38 @@ class MyBooks extends ConsumerWidget {
       backgroundColor: Colors.grey.shade300,
       bottomNavigationBar: MyBottomNavBar(currentIndex: myProperty["bot_nav_idx"]),
 
-      body: ListView(
-        children: const [
-          Text("Chua co sach")
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 180,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 10,
+              mainAxisExtent: 250
+          ),
+          children: [
+            Container(
+              color: Colors.blueGrey,
+              height: 300,
+            ),
+            Container(
+              color: Colors.blueGrey,
+              height: 300,
+            ),
+            Container(
+              color: Colors.blueGrey,
+              height: 300,
+            ),
+            Container(
+              color: Colors.blueGrey,
+              height: 300,
+            ),
+            Container(
+              color: Colors.blueGrey,
+              height: 300,
+            ),
+          ],
+        ),
       ),
     );
   }

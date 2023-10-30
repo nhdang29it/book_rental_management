@@ -24,8 +24,8 @@ class MyBottomNavBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.menu_book_outlined),
-          label: "Tủ sách",
-          activeIcon: Icon(Icons.menu_book),
+          label: "Sách yêu thích",
+          activeIcon: Icon(Icons.favorite_border),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),

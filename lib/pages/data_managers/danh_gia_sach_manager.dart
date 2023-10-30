@@ -21,6 +21,25 @@ class DanhGiaSachManager {
     return rating;
   }
 
+  Future<void> danhGiaSach(DanhGiaSachModel dgs) async {
+    collectionReference.doc(dgs.id!).set(dgs.toJson());
+  }
+  
+  Future<DanhGiaSachModel> getUserRating(String id, String bookId) async {
+    final userRating = await collectionReference.doc(id+bookId).get();
+
+    final dgs = DanhGiaSachModel(
+        userId: userRating.get("userId"),
+        userName: userRating.get("userName"),
+        mssv: userRating.get("mssv"),
+        bookId: userRating.get("bookId"),
+        tenSach: userRating.get("tenSach"),
+        rating: userRating.get("rating")
+    );
+
+    return dgs;
+  }
+
   Future<List<DanhGiaSachModel>> getDanhGiaSach(String bookId) async {
     final List<DanhGiaSachModel> dsDanhGiaSach = [];
     final QuerySnapshot danhGiaSachSnapshot = await collectionReference.where("bookId", isEqualTo: bookId ).get();

@@ -60,6 +60,35 @@ class ElasticService {
     return jsonDecode(utf8.decode(response.bodyBytes));
   }
 
+  Future<dynamic> getBookByType(String loai) async {
+    final response = await http.post(
+        Uri.https(baseUrl, '$index/_search'),
+        headers: <String, String>{
+          'Content-type': 'application/json',
+          'Authorization': 'apiKey ckNUN0M0b0JHYmVOZlNaMHExeGg6SFByS1JzeWRTRWFhaGZ4S2RId0xIZw=='
+        },
+        body: jsonEncode({
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "match_all": {}
+                }
+              ],
+              "filter": [
+                {
+                  "term": {
+                    "type": loai
+                  }
+                }
+              ]
+            }
+          }
+        })
+    );
+    return jsonDecode(utf8.decode(response.bodyBytes));
+  }
+
   Future<dynamic> getBookWithSize(int size) async {
     final response = await http.post(
         Uri.https(baseUrl, '$index/$type'),
