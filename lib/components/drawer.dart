@@ -27,10 +27,10 @@ class MyDrawer extends StatelessWidget {
                     width: 100,
                   ),
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 Text(
                     user.displayName ?? "chua co ten",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 16
@@ -61,10 +61,30 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text("Sách tiếng anh"),
+            title: const Text("Sách Tiếng Anh"),
             onTap: (){
               Navigator.pushNamed(context, "/seeMore", arguments: {
-                "label": "Sách tiếng anh"
+                "label": "Sách Tiếng Anh",
+                "listFilters": [
+                  {
+                    "language": "en"
+                  }
+                ]
+                // "type": "lt"
+              });
+            },
+          ),
+          ListTile(
+            title: const Text("Sách Tiếng Việt"),
+            onTap: (){
+              Navigator.pushNamed(context, "/seeMore", arguments: {
+                "label": "Sách Tiếng Việt",
+                "listFilters": [
+                  {
+                    "language": "vi"
+                  }
+                ]
+                // "type": "lt"
               });
             },
           ),

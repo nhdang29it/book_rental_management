@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:quan_ly_thu_vien/models/book_model.dart';
-import 'package:quan_ly_thu_vien/providers/elastic_search_provider.dart';
 import '../contrast/style.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/elastic_search_provider.dart';
 import 'book.dart';
 
 class AllBook extends StatelessWidget {
-  const AllBook({super.key});
+  const AllBook({required this.label, required this.type,super.key});
+
+  final String label, type;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +28,19 @@ class AllBook extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                    "Sách lập trình".toUpperCase(),
+                    label.toUpperCase(),
                   style: myTextStyle(context)
                 ),
                 TextButton(
                   onPressed: (){
                     Navigator.pushNamed(context, "/seeMore", arguments: {
-                      "label": "Sách lập trình",
-                      "type": "lt"
+                      "label": label,
+                      "type": type,
+                      "listFilters": [
+                        {
+                          "type": type
+                        }
+                      ]
                     });
                   },
                   child: const Text("Xem thêm"),
@@ -41,21 +48,33 @@ class AllBook extends StatelessWidget {
               ],
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             child: Consumer(
               builder: (context, ref, child){
-                final snapshot = ref.watch(allBookProvider);
+                final esService = ref.watch(elasticSearchProvider);
+                return FutureBuilder(
+                  future: esService.getBookByType(type),
+                  builder: (context ,snapshot){
+                    if(snapshot.hasError){
+                      return Center(child: Text(
+                          "Đã có lỗi xảy ra. Hãy kiểm tra kết nối mạng!",
+                        style: TextStyle(
+                          color: Colors.red.shade400
+                        ),
+                      ),);
+                    }
+                    if(snapshot.hasData){
 
-                return snapshot.when(
-                    data: (snapshot){
-                      List<dynamic> listBook = snapshot["hits"]["hits"];
+                      final listBook = snapshot.data['hits']['hits'] as List<dynamic>;
                       List<BookModel> list = listBook.map((e){
                         final Map<String, dynamic> map = e["_source"];
                         map["id"] = e["_id"];
 
                         return BookModel.fromJson(map);
                       }).toList();
+
 
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -66,14 +85,10 @@ class AllBook extends StatelessWidget {
                           ],
                         ),
                       );
-                    },
-                    error: (_,err){
-                      return const Text("Đã có lỗi xảy ra. Hãy kiểm tra lại thông tin cài đặt mạng!!"
-                      ,style: TextStyle(color: Colors.red),);
-                    },
-                    loading: () => const CircularProgressIndicator()
+                    }
+                    return const Center(child: CircularProgressIndicator(),);
+                  },
                 );
-
               },
             ),
           ),

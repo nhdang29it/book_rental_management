@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:quan_ly_thu_vien/models/book_model.dart';
 import '../services/elastic_search.dart';
 import '../models/network_model.dart';
 
@@ -8,9 +9,10 @@ class SearchPageDelegate extends SearchDelegate {
 
   final String? label;
   final NetWorkConfigure network;
+  final List<String> types;
 
 
-  SearchPageDelegate({this.label, required this.network}) : super (
+  SearchPageDelegate({this.label, required this.network, required this.types}) : super (
       searchFieldDecorationTheme: const InputDecorationTheme(
           hintStyle: TextStyle(
               color: Colors.grey,
@@ -57,15 +59,12 @@ class SearchPageDelegate extends SearchDelegate {
 
 
     return FutureBuilder(
-      future: esClient.searchBooks(query),
+      future: esClient.searchBooks(query: query, listTypeBook: types),
       builder: (context, snapshot){
         if(!snapshot.hasData){
           return const Center(child: CircularProgressIndicator(),);
         } else {
           var data = jsonDecode(utf8.decode(snapshot.data!.bodyBytes));
-          // if(data["hits"]["total"]["value"] == 0){
-          //   print("khog co du lieu");
-          // }
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView(
@@ -128,49 +127,65 @@ class SearchPageDelegate extends SearchDelegate {
       ];
     }
 
-    return listData.map((element) => Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.network(
-              element["_source"]["url"] ?? "https://nhatminhad.net/files/assets/idesign-nhung-thiet-ke-bia-sach-dep-nhat-danh-cho-nam-2018-09.jpg",
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                        : null,
+
+    return listData.map((element){
+
+      final data = element["_source"];
+      data["id"] = element["_id"];
+
+      final BookModel book = BookModel.fromJson(data);
+
+
+      return InkWell(
+        onTap: (){
+          Navigator.pushNamed(context, "/bookDetail", arguments: book);
+        },
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.network(
+                  book.url ?? "https://nhatminhad.net/files/assets/idesign-nhung-thiet-ke-bia-sach-dep-nhat-danh-cho-nam-2018-09.jpg",
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  height: 110,
+                  width: 70,
+                ),
+                const SizedBox(width: 10,),
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width - 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          book.title ?? "ten sach: null",
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis
+                      ),
+                      const SizedBox(height: 10,),
+                      Text("Author: ${book.author ?? "no name"}", softWrap: true,),
+                    ],
                   ),
-                );
-              },
-              height: 110,
-              width: 70,
+                )
+              ],
             ),
-            SizedBox(width: 10,),
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width - 120,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    element["_source"]["title"] ?? "ten sach: null",
-                    softWrap: true,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis
-                  ),
-                  SizedBox(height: 10,),
-                  Text("Author: ${element["_source"]["author"] ?? "no name"}", softWrap: true,),
-                ],
-              ),
-            )
-          ],
+          ),
         ),
-      ),
-    )).toList();
+      );
+    }).toList();
   }
 
 }

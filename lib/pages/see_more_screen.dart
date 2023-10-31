@@ -23,7 +23,11 @@ class SeeMoreScreen extends StatelessWidget {
             final network = ref.watch(networkProvider);
             return IconButton(
               onPressed: (){
-                showSearch(context: context, delegate: SearchPageDelegate(label: myArg["label"], network: network));
+                showSearch(context: context, delegate: SearchPageDelegate(
+                    label: myArg["label"],
+                    network: network,
+                    types: myArg["type"] != null ? [myArg["type"]] : []
+                ));
               },
               icon: const Icon(Icons.search),
             );
@@ -36,10 +40,11 @@ class SeeMoreScreen extends StatelessWidget {
         final esService = ref.watch(elasticSearchProvider);
 
         return FutureBuilder(
-          future: esService.getBookByType(myArg["type"] ?? "lt"),
+          // future: esService.getBookByType(myArg["type"] ?? "lt"),
+          future: esService.getBookByFilter(listFilter: myArg["listFilters"]),
           builder: (context, snapshot){
             if(snapshot.hasError){
-              return const Center(child: Text("Da co loi xay ra"));
+              return const Center(child: Text("Đã có lỗi xảy ra"));
             }
             if(snapshot.hasData){
               final listData = snapshot.data['hits']['hits'] as List<dynamic>;

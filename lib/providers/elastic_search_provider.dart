@@ -7,7 +7,3 @@ final elasticSearchProvider = Provider((ref) {
   final netWork = ref.watch(networkProvider);
   return ElasticService(baseUrl: "${netWork.host}:${netWork.port}", index: netWork.index, type: "_search");
 });
-
-final allBookProvider = FutureProvider((ref){
-  return ref.watch(elasticSearchProvider).getBookWithSize(8);
-});

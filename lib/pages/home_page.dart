@@ -30,7 +30,7 @@ class HomePage extends ConsumerWidget {
                 showSearch(
                     context: context,
                     delegate: SearchPageDelegate(
-                        label: "Tìm kiếm sách", network: network));
+                        label: "Tìm kiếm sách", network: network, types: []));
               },
               icon: const Icon(Icons.search),
             ),
@@ -50,7 +50,11 @@ class HomePage extends ConsumerWidget {
           child: ListView(
             children: [
               const ThongBaoTrangChu(),
-              const AllBook(),
+              const AllBook(label: "Sách lập trình", type: "lt",),
+              const SizedBox(
+                height: 10,
+              ),
+              const AllBook(label: "Sách Kĩ năng lập trình", type: "kn",),
               const SizedBox(
                 height: 10,
               ),
