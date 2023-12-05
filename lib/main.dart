@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
                 useMaterial3: true,
-                textTheme: GoogleFonts.latoTextTheme()
+                textTheme: GoogleFonts.notoSansTextTheme()
               ),
               // routes: routes,
               // initialRoute: "/",
