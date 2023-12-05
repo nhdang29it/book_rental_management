@@ -9,6 +9,7 @@ import 'pages/export_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
 import './firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
                 useMaterial3: true,
+                textTheme: GoogleFonts.latoTextTheme()
               ),
               // routes: routes,
               // initialRoute: "/",

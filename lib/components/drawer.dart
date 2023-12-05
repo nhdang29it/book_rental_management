@@ -56,7 +56,12 @@ class MyDrawer extends StatelessWidget {
             onTap: (){
               Navigator.pushNamed(context, "/seeMore", arguments: {
                 "label": "Sách kĩ năng lập trình",
-                "type": "kn"
+                "type": "kn",
+                "listFilters": [
+                  {
+                    "type": "kn"
+                  }
+                ]
               });
             },
           ),
@@ -86,6 +91,13 @@ class MyDrawer extends StatelessWidget {
                 ]
                 // "type": "lt"
               });
+            },
+          ),
+          const Divider(),
+          ListTile(
+            title: Text("Luận văn".toUpperCase()),
+            onTap: (){
+              Navigator.pushNamed(context, "/luanVan");
             },
           ),
           const Divider(),

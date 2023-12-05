@@ -7,7 +7,7 @@ class BookCartNotifier extends StateNotifier<List<BookModel>>{
 
   bool addBook(BookModel book){
     final result = state.where((element) => element.id == book.id);
-    if( result.isEmpty && state.length < 4){
+    if( result.isEmpty && state.length < 3){
       state = [...state, book];
       return true;
     } else {

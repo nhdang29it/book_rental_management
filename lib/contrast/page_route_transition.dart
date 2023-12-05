@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:quan_ly_thu_vien/models/book_model.dart';
+import 'package:quan_ly_thu_vien/models/tai_lieu_model.dart';
 import '../pages/export_pages.dart';
 
 PageTransition pageRouteTransition(RouteSettings settings){
@@ -50,6 +51,18 @@ PageTransition pageRouteTransition(RouteSettings settings){
     case '/dangKyMuonSach/muonSach':
       return PageTransition(
           child: const DangKyMuonSachScreen(),
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 300)
+      );
+    case '/luanVan':
+      return PageTransition(
+          child: const LuanVanScreen(),
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 300)
+      );
+    case '/luanVanDetail':
+      return PageTransition(
+          child: LuanVanDetail(taiLieu: settings.arguments as TaiLieuModel),
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 300)
       );

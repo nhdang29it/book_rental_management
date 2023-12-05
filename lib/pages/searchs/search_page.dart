@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:quan_ly_thu_vien/models/book_model.dart';
-import '../services/elastic_search.dart';
-import '../models/network_model.dart';
+import '../../services/elastic_search.dart';
+import '../../models/network_model.dart';
 
 
 class SearchPageDelegate extends SearchDelegate {

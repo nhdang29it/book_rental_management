@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quan_ly_thu_vien/models/book_model.dart';
-import 'package:quan_ly_thu_vien/pages/search_page.dart';
+import 'package:quan_ly_thu_vien/pages/searchs/search_page.dart';
 import 'package:quan_ly_thu_vien/providers/elastic_search_provider.dart';
 import 'package:quan_ly_thu_vien/providers/network_provider.dart';
 
