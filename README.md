@@ -1,4 +1,4 @@
-# quan_ly_thu_vien
+# Book rental management
 
 A new Flutter project.
 
